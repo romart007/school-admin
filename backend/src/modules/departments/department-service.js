@@ -6,7 +6,6 @@ const {
   updateDepartmentById,
   deleteDepartmentById,
 } = require("./department-repository");
-const { departmentModuleHandler } = require("./department-module");
 
 const processGetAllDepartments = async () => {
   const departments = await getAllDepartments();
@@ -34,6 +33,7 @@ const processGetDepartmentById = async (id) => {
 
   return department;
 };
+
 const processUpdateDepartmentById = async (payload) => {
   const affectedRow = await updateDepartmentById(payload);
   if (affectedRow <= 0) {
@@ -52,12 +52,10 @@ const processDeleteDepartmentById = async (id) => {
   return { message: "Department deleted successfully" };
 };
 
-module.exports = departmentModuleHandler(async () => {
-  return {
-    processGetAllDepartments,
-    processGetDepartmentById,
-    processUpdateDepartmentById,
-    processDeleteDepartmentById,
-    processAddNewDepartment,
-  };
-});
+module.exports = {
+  processGetAllDepartments,
+  processGetDepartmentById,
+  processUpdateDepartmentById,
+  processDeleteDepartmentById,
+  processAddNewDepartment,
+};
