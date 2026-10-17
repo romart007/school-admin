@@ -35,7 +35,10 @@ const addNewStudent = async (payload) => {
     try {
         const result = await addOrUpdateStudent(payload);
         if (!result.status) {
-            throw new ApiError(500, result.message);
+            const detail = result.description
+                ? `${result.message}: ${result.description}`
+                : result.message;
+            throw new ApiError(500, detail);
         }
 
         try {
@@ -45,6 +48,10 @@ const addNewStudent = async (payload) => {
             return { message: ADD_STUDENT_AND_BUT_EMAIL_SEND_FAIL }
         }
     } catch (error) {
+        // Don't mask the real failure (e.g. "Email already exists", FK/constraint details)
+        if (error instanceof ApiError) {
+            throw error;
+        }
         throw new ApiError(500, "Unable to add student");
     }
 }
